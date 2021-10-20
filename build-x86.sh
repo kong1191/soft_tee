@@ -44,7 +44,11 @@ else
   SSL_OPTIONS+=" shared"
 fi
 
-[[ "${CLEAN_OUT}" == "TRUE" ]] && make distclean
+if [[ "${CLEAN_OUT}" == "TRUE" ]]; then
+  if [[ -e "Makefile" ]]; then
+    make distclean
+  fi
+fi
 
 if [[ "${ENABLE_FIPS_2}" == "TRUE" ]]; then
   echo -e "\nBuilding OpenSSL with FIPS Module 2.0...\n"
@@ -91,7 +95,7 @@ cmake --debug-trycompile \
     -DENABLE_GOST=FALSE \
     -DENABLE_FIPS=${WITH_FIPS}
 
-make VERBOSE=1 -C ${SOFTHSM_BUILD_DIR}
+make VERBOSE=1 -j24 -C ${SOFTHSM_BUILD_DIR}
 
 echo -e "\nTesting SoftHSM...\n"
 pushd ${SOFTHSM_BUILD_DIR} > /dev/null
