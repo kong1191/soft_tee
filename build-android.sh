@@ -43,41 +43,41 @@ if [[ "${ENABLE_FIPS_2}" == "TRUE" ]]; then
 fi
 
 ###### Android ARM64 OpenSSL Library/Tools ######
-# [[ "${CLEAN_OUT}" == "TRUE" ]] && rm -rf ${ARM64_SSL_OUT_DIR}
+[[ "${CLEAN_OUT}" == "TRUE" ]] && rm -rf ${ARM64_SSL_OUT_DIR}
 
-# pushd ${OPENSSL_DIR} > /dev/null
+pushd ${OPENSSL_DIR} > /dev/null
 
-# if [[ "${CLEAN_OUT}" == "TRUE" ]]; then
-#   if [[ -e "Makefile" ]]; then
-#     make distclean
-#   fi
-# fi
+if [[ "${CLEAN_OUT}" == "TRUE" ]]; then
+  if [[ -e "Makefile" ]]; then
+    make distclean
+  fi
+fi
 
-# SSL_OPTIONS="android-arm64 --prefix=${ARM64_SSL_OUT_DIR} -D__ANDROID_API__=${ANDROID_API} --openssldir=${ARM64_SSL_OUT_DIR}"
-# if [[ "${USE_OPENSSL_STATIC_LIB}" == "TRUE" ]]; then
-#   SSL_OPTIONS+=" no-shared -fPIC"
-# else
-#   SSL_OPTIONS+=" shared"
-# fi
+SSL_OPTIONS="android-arm64 --prefix=${ARM64_SSL_OUT_DIR} -D__ANDROID_API__=${ANDROID_API} --openssldir=${ARM64_SSL_OUT_DIR}"
+if [[ "${USE_OPENSSL_STATIC_LIB}" == "TRUE" ]]; then
+  SSL_OPTIONS+=" no-shared -fPIC"
+else
+  SSL_OPTIONS+=" shared"
+fi
 
-# if [[ "${ENABLE_FIPS_2}" == "TRUE" ]]; then
-#   echo -e "\nBuilding OpenSSL with FIPS Module 2.0...\n"
-#   ./Configure ${SSL_OPTIONS} --with-fipsdir=${FIPS_OUT_DIR}
-#   make depend
-# elif [[ "${ENABLE_FIPS_3}" == "TRUE" ]]; then
-#   echo -e "\nBuilding OpenSSL with FIPS Module 3.0...\n"
-#   ./Configure ${SSL_OPTIONS} fips
-#   make depend
-# else
-#   echo -e "\nBuilding OpenSSL...\n"
-#   ./Configure ${SSL_OPTIONS}
-#   make depend
-# fi
+if [[ "${ENABLE_FIPS_2}" == "TRUE" ]]; then
+  echo -e "\nBuilding OpenSSL with FIPS Module 2.0...\n"
+  ./Configure ${SSL_OPTIONS} --with-fipsdir=${FIPS_OUT_DIR}
+  make depend
+elif [[ "${ENABLE_FIPS_3}" == "TRUE" ]]; then
+  echo -e "\nBuilding OpenSSL with FIPS Module 3.0...\n"
+  ./Configure ${SSL_OPTIONS} fips
+  make depend
+else
+  echo -e "\nBuilding OpenSSL...\n"
+  ./Configure ${SSL_OPTIONS}
+  make depend
+fi
 
-# make -j24
-# #make -j24 install
+make -j24
+#make -j24 install
 
-# popd > /dev/null
+popd > /dev/null
 
 
 ###### SoftHSM Library/Tools ######
